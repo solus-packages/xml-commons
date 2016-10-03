@@ -1,0 +1,29 @@
+name       : xml-commons
+version    : 1.4.01
+release    : 1
+source     :
+    - http://mirrors.sonic.net/apache//xerces/xml-commons/source/xml-commons-external-1.4.01-src.tar.gz : d34bd88dc89c5c1ed2545ec5c61e4606fc28beb200a6fecf8c3ed17694181866
+license    :
+    - Apache-2.0
+    - W3C
+    - SAX-PD
+component  : programming
+summary    : Common xml code
+description: |
+    Common code and guidelines for xml projects
+builddeps  :
+    - openjdk-8
+rundeps    :
+    - openjdk-8
+build      : |
+    mkdir classes
+    javac -source 1.4 -d classes `find org/ javax/ -name '*.java'`
+    cd classes
+    jar -cvfm ../xml-apis-ext.jar ../manifest.commons \
+        `find -type d -name "sac" -o -name "smil" -o -name "svg"`
+    jar -cvfm ../xml-apis.jar ../manifest.commons \
+        `find -type f ! \( -wholename "*/sac/*" -o -wholename "*/smil/*" -o wholename "*/svf/*" \)`
+install    : |
+    install -dm 755 $installdir/usr/share/xml-commons
+    install -m 644 xml-apis-ext.jar $installdir/usr/share/xml-commons/
+    install -m 644 xml-apis.jar $installdir/usr/share/xml-commons/
